@@ -1,8 +1,8 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { router } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { useThemeColor } from '@/hooks/use-theme-color';
+import { router } from 'expo-router';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function HomeScreen() {
   const tintColor = useThemeColor({}, 'tint');
@@ -16,7 +16,7 @@ export default function HomeScreen() {
     <ThemedView style={styles.container}>
       <View style={styles.content}>
         <ThemedText type="title" style={[styles.title, { color: textColor }]}>
-          Beauty Scan
+          Beauty 🌸 Scan
         </ThemedText>
         <ThemedText style={[styles.subtitle, { color: textColor }]}>
           Scan barcodes to discover beauty product details
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 12,
     textAlign: 'center',
+    lineHeight: 40,
   },
   subtitle: {
     fontSize: 18,
