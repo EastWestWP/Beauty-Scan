@@ -101,10 +101,18 @@ constants/
 
 ## API Integration
 
-The app uses free third-party APIs for product data:
+The app uses free third-party APIs optimized for beauty products:
 
-- **Primary**: Open Product Data API (free, no API key required)
-- **Fallback**: UPC Item DB API (free tier)
+- **Primary**: UPC Item DB API (free tier, 100 requests/day) - Excellent coverage for USA beauty and cosmetics products
+- **Fallback**: Open Beauty Facts API (free, no API key) - Specialized database for beauty and personal care products
+
+Both APIs are real, working services that provide accurate product information including:
+- Product names and brands
+- Categories (beauty, cosmetics, skincare, etc.)
+- Product images
+- Ingredients lists
+- Size/volume information
+- Pricing data
 
 You can modify the API service in `services/barcode-api.ts` to use different providers if needed.
 
