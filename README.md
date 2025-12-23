@@ -81,6 +81,192 @@ Then choose:
 3. **Product Details**: View comprehensive product information
 4. **Scan Again**: Tap "Scan Another Product" to continue scanning
 
+## Testing the App
+
+### Prerequisites for Testing
+
+Before testing, ensure you have:
+- ✅ Development build installed on your device/emulator (camera won't work in Expo Go)
+- ✅ Camera permissions granted
+- ✅ Internet connection (required for API calls)
+
+### Testing on Physical Device (Recommended)
+
+1. **Build and Install Development Build**:
+   ```bash
+   # For iOS
+   npx eas build --profile development --platform ios
+   
+   # For Android
+   npx eas build --profile development --platform android
+   ```
+
+2. **Install the build** on your device using the provided link or QR code
+
+3. **Grant Camera Permission**: When you first open the scan screen, grant camera permission
+
+### Testing on Emulator/Simulator
+
+**iOS Simulator**:
+- Camera functionality is limited on iOS Simulator
+- You can test UI and navigation, but barcode scanning may not work properly
+- Use a physical device for full camera testing
+
+**Android Emulator**:
+- Camera can be tested using the emulator's virtual camera
+- Go to Extended Controls → Camera → Webcam to use your computer's camera
+- Or use virtual scene for testing
+
+### Test Scenarios
+
+#### 1. Basic Barcode Scanning Test
+
+**Steps**:
+1. Open the app
+2. Tap "📷 Scan Product" button
+3. Point camera at a beauty product barcode
+4. Wait for scan detection
+5. Verify product details are displayed
+
+**Expected Result**: 
+- Camera opens with scanning frame
+- Barcode is detected automatically
+- Product information appears on details screen
+
+#### 2. Test with Real Beauty Products
+
+**Recommended Test Barcodes** (USA Beauty Products):
+- **Maybelline Mascara**: UPC `079400500100`
+- **L'Oreal Foundation**: UPC `360054290200`
+- **Neutrogena Face Wash**: UPC `070330500100`
+- **Olay Moisturizer**: UPC `079400500100`
+
+**Steps**:
+1. Find a beauty product with a visible barcode
+2. Ensure good lighting
+3. Hold camera steady, 4-6 inches from barcode
+4. Wait for automatic detection
+
+**Expected Result**: Product details including name, brand, category, and image
+
+#### 3. Test Error Handling
+
+**Test Case 1: Invalid Barcode**
+- Scan a non-product barcode (like a QR code)
+- **Expected**: Error message or "Product not found"
+
+**Test Case 2: Product Not in Database**
+- Scan a barcode that doesn't exist in the API database
+- **Expected**: "Product not found" message with option to scan again
+
+**Test Case 3: Poor Lighting**
+- Try scanning in low light
+- **Expected**: App should still attempt to scan, may take longer
+
+#### 4. Test UI and Navigation
+
+**Test Scenarios**:
+1. **Home Screen**:
+   - Verify "Scan Product" button is visible and clickable
+   - Check baby pink theme colors
+   - Verify instructions are displayed
+
+2. **Scan Screen**:
+   - Verify camera view appears
+   - Check scanning frame (pink corners) is visible
+   - Test "Scan Again" button after scanning
+   - Test "Cancel" button to go back
+
+3. **Product Details Screen**:
+   - Verify all product information displays correctly
+   - Check product image loads (if available)
+   - Test "Scan Another Product" button
+   - Test "Back" button navigation
+
+#### 5. Test API Integration
+
+**Test API Responses**:
+1. **Successful Lookup**: Scan a known product
+   - Verify data is fetched and displayed correctly
+   - Check all fields populate (name, brand, category, etc.)
+
+2. **API Fallback**: 
+   - If primary API fails, verify fallback API is used
+   - Check console logs for API errors
+
+3. **Network Issues**:
+   - Disable internet connection
+   - Try scanning
+   - **Expected**: Error message about network/API failure
+
+### Testing Without Physical Barcodes
+
+If you don't have physical products to test with:
+
+1. **Use Barcode Generator**:
+   - Generate test barcodes online
+   - Display on another device/computer screen
+   - Scan from screen (may work depending on screen quality)
+
+2. **Test with Barcode Images**:
+   - Find barcode images online
+   - Display on a screen
+   - Scan from the screen
+
+3. **Mock API Responses** (Development):
+   - Temporarily modify `services/barcode-api.ts`
+   - Return mock product data for testing UI
+
+### Quick Test Checklist
+
+- [ ] App launches without errors
+- [ ] Home screen displays correctly with baby pink theme
+- [ ] "Scan Product" button navigates to scan screen
+- [ ] Camera permission is requested and granted
+- [ ] Camera view displays correctly
+- [ ] Scanning frame (pink corners) is visible
+- [ ] Barcode can be scanned successfully
+- [ ] Product details screen displays after scan
+- [ ] Product information is accurate and complete
+- [ ] "Scan Again" button works
+- [ ] "Back" button navigates correctly
+- [ ] Error handling works for invalid/not found products
+- [ ] App handles network errors gracefully
+
+### Debugging Tips
+
+1. **Check Console Logs**:
+   ```bash
+   npx expo start
+   # Watch the terminal for API errors and debugging info
+   ```
+
+2. **Enable Debug Mode**:
+   - Shake device or press `Cmd+D` (iOS) / `Cmd+M` (Android)
+   - Open React Native Debugger
+   - Check Network tab for API calls
+
+3. **Test API Directly**:
+   ```bash
+   # Test UPC Item DB API
+   curl "https://api.upcitemdb.com/prod/trial/lookup?upc=079400500100"
+   
+   # Test Open Beauty Facts API
+   curl "https://world.openbeautyfacts.org/api/v0/product/079400500100.json"
+   ```
+
+4. **Clear Cache**:
+   ```bash
+   npx expo start --clear
+   ```
+
+### Performance Testing
+
+- **Scan Speed**: Test how quickly barcodes are detected
+- **API Response Time**: Measure time from scan to product display
+- **Image Loading**: Verify product images load efficiently
+- **Memory Usage**: Check for memory leaks during multiple scans
+
 ## Project Structure
 
 ```
@@ -186,17 +372,3 @@ If you encounter build errors:
 - Reinstall dependencies: `rm -rf node_modules && npm install`
 - Check Expo SDK version compatibility
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-- [Expo Camera documentation](https://docs.expo.dev/versions/latest/sdk/camera/): Learn about camera and barcode scanning
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
