@@ -19,10 +19,27 @@ A beautiful barcode scanning app for USA beauty products, built with Expo and Re
 
 ## Get started
 
+### Clone the Repository
+
+First, clone the repository from GitHub:
+
+```bash
+git clone https://github.com/nh0xThi/Beauty-Scan.git
+cd Beauty-Scan
+```
+
+Or if you prefer using SSH:
+
+```bash
+git clone git@github.com:nh0xThi/Beauty-Scan.git
+cd Beauty-Scan
+```
+
 ### Prerequisites
 
 - Node.js (v18 or later)
 - npm or yarn
+- Git (for cloning the repository)
 - For camera functionality, you'll need a **development build** (camera doesn't work in Expo Go)
 
 ### Installation
@@ -371,4 +388,43 @@ If you encounter build errors:
 - Clear cache: `npx expo start --clear`
 - Reinstall dependencies: `rm -rf node_modules && npm install`
 - Check Expo SDK version compatibility
+
+## Repository
+
+This project is available on GitHub:
+
+🔗 **GitHub Repository**: [https://github.com/nh0xThi/Beauty-Scan](https://github.com/nh0xThi/Beauty-Scan)
+
+### Quick Start from GitHub
+
+To get started with this project, clone it from GitHub:
+
+```bash
+# Clone the repository
+git clone https://github.com/nh0xThi/Beauty-Scan.git
+
+# Navigate to the project directory
+cd Beauty-Scan
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run start
+```
+
+### Contributing
+
+Contributions are welcome! If you'd like to contribute to this project:
+
+1. Fork the repository on GitHub
+2. Clone your fork locally: `git clone https://github.com/YOUR_USERNAME/Beauty-Scan.git`
+3. Create a feature branch: `git checkout -b feature/amazing-feature`
+4. Make your changes and commit them: `git commit -m 'Add some amazing feature'`
+5. Push to your fork: `git push origin feature/amazing-feature`
+6. Open a Pull Request on the original repository
+
+### License
+
+This project is open source and available for use.
 
