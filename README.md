@@ -2,6 +2,10 @@
 
 A beautiful barcode scanning app for USA beauty products, built with Expo and React Native. Scan product barcodes to instantly view detailed product information including name, brand, category, ingredients, and more.
 
+## How It Works
+
+Video: [How it works](assets/how%20it%20works.mp4)
+
 ## Features
 
 - 📷 **Barcode Scanning**: Scan product barcodes using your device's camera

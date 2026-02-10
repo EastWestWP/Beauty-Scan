@@ -4,18 +4,20 @@ import { useThemeColor } from '@/hooks/use-theme-color';
 import { fetchProductByBarcode } from '@/services/barcode-api';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, Animated, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const scanLineAnim = useRef(new Animated.Value(0)).current;
 
   const backgroundColor = useThemeColor({}, 'background');
   const tintColor = useThemeColor({}, 'tint');
   const textColor = useThemeColor({}, 'text');
+  const isWeb = Platform.OS === 'web';
 
   useEffect(() => {
     if (permission && !permission.granted && !permission.canAskAgain) {
@@ -30,8 +32,35 @@ export default function ScanScreen() {
     }
   }, [permission]);
 
+  useEffect(() => {
+    if (!permission?.granted || scanned || loading) {
+      scanLineAnim.stopAnimation();
+      return;
+    }
+
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(scanLineAnim, {
+          toValue: 1,
+          duration: 1400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scanLineAnim, {
+          toValue: 0,
+          duration: 1400,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    loop.start();
+    return () => loop.stop();
+  }, [permission?.granted, scanned, loading, scanLineAnim]);
+
   const handleBarCodeScanned = async ({ type, data }: { type: string; data: string }) => {
     if (scanned || loading) return;
+
+    console.log('Barcode scanned', { type, data });
 
     setScanned(true);
     setLoading(true);
@@ -99,23 +128,49 @@ export default function ScanScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <CameraView
-        style={styles.camera}
-        facing="back"
-        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-        barcodeScannerSettings={{
-          barcodeTypes: ['ean13', 'ean8', 'upc_a', 'upc_e', 'code128', 'code39'],
-        }}>
+      <View style={styles.cameraContainer}>
+        <CameraView
+          style={styles.camera}
+          facing="back"
+          onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+          onCameraReady={() => console.log('Camera ready')}
+          onMountError={(event) => console.warn('Camera mount error', event)}
+          barcodeScannerSettings={{
+            barcodeTypes: isWeb ? ['qr'] : ['ean13', 'ean8', 'upc_a', 'upc_e', 'code128', 'code39'],
+          }}
+        />
         <View style={styles.overlay}>
           <View style={styles.scanArea}>
             <View style={[styles.corner, styles.topLeft]} />
             <View style={[styles.corner, styles.topRight]} />
             <View style={[styles.corner, styles.bottomLeft]} />
             <View style={[styles.corner, styles.bottomRight]} />
+            {!scanned && !loading && (
+              <Animated.View
+                style={[
+                  styles.scanLine,
+                  {
+                    transform: [
+                      {
+                        translateY: scanLineAnim.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [6, 214],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              />
+            )}
           </View>
           <ThemedText style={styles.instruction}>
             Position the barcode within the frame
           </ThemedText>
+          {isWeb && (
+            <ThemedText style={styles.webNotice}>
+              Web scanner supports QR codes only. Use a dev build on a device for UPC/EAN.
+            </ThemedText>
+          )}
           {loading && (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="#FFB6C1" />
@@ -128,7 +183,7 @@ export default function ScanScreen() {
             </View>
           )}
         </View>
-      </CameraView>
+      </View>
       {scanned && !loading && (
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -156,8 +211,12 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
   },
-  overlay: {
+  cameraContainer: {
     flex: 1,
+    alignSelf: 'stretch',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -166,6 +225,14 @@ const styles = StyleSheet.create({
     width: 250,
     height: 250,
     position: 'relative',
+  },
+  scanLine: {
+    position: 'absolute',
+    left: 10,
+    right: 10,
+    height: 2,
+    backgroundColor: '#FFB6C1',
+    opacity: 0.9,
   },
   corner: {
     position: 'absolute',
@@ -204,6 +271,14 @@ const styles = StyleSheet.create({
     color: '#FFF',
     textAlign: 'center',
     paddingHorizontal: 20,
+  },
+  webNotice: {
+    marginTop: 12,
+    fontSize: 12,
+    color: '#FFF',
+    textAlign: 'center',
+    paddingHorizontal: 28,
+    opacity: 0.85,
   },
   loadingContainer: {
     marginTop: 20,
