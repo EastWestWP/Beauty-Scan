@@ -126,6 +126,9 @@ export default function ScanScreen() {
     );
   }
 
+  // On web, use front-facing camera (webcam), on mobile use back camera
+  const cameraFacing = Platform.OS === 'web' ? 'front' : 'back';
+
   return (
     <ThemedView style={styles.container}>
       <View style={styles.cameraContainer}>
