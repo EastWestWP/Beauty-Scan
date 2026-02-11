@@ -28,14 +28,14 @@ Video: [How it works](assets/how%20it%20works.mp4)
 First, clone the repository from GitHub:
 
 ```bash
-git clone https://github.com/nh0xThi/Beauty-Scan.git
+git clone https://github.com/EastWestWP/Beauty-Scan.git
 cd Beauty-Scan
 ```
 
 Or if you prefer using SSH:
 
 ```bash
-git clone git@github.com:nh0xThi/Beauty-Scan.git
+git clone git@github.com:EastWestWP/Beauty-Scan.git
 cd Beauty-Scan
 ```
 
@@ -420,7 +420,7 @@ If you encounter build errors:
 
 This project is available on GitHub:
 
-🔗 **GitHub Repository**: [https://github.com/nh0xThi/Beauty-Scan](https://github.com/nh0xThi/Beauty-Scan)
+🔗 **GitHub Repository**: [https://github.com/EastWestWP/Beauty-Scan](https://github.com/EastWestWP/Beauty-Scan)
 
 ### Quick Start from GitHub
 
@@ -428,7 +428,7 @@ To get started with this project, clone it from GitHub:
 
 ```bash
 # Clone the repository
-git clone https://github.com/nh0xThi/Beauty-Scan.git
+git clone https://github.com/EastWestWP/Beauty-Scan.git
 
 # Navigate to the project directory
 cd Beauty-Scan
